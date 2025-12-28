@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提问箱&留言板 - GOA-PLAZA</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="language.js"></script>
+    <style>
+        @font-face {
+            font-family: 'PIXEL';
+            src: url('font/fusion-pixel-12px-monospaced-zh_hans.otf.woff2');
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #ffffff;
+            font-family: 'PIXEL', sans-serif;
+            overflow-x: hidden;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        #site-scale-layer {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            transform-origin: top center;
+            transition: transform 0.3s ease;
+        }
+
+        #murder-bg {
+            position: absolute;
+            top: 50%;
+            left: 66%;
+            transform: translate(-50%, -50%);
+            width: 40%;
+            max-width: none;
+            opacity: 1;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #guestbook-window {
+            position: relative;
+            z-index: 10;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: block;
+            width: 60px;
+            height: 60px;
+        }
+
+        .back-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: grayscale(100%) opacity(0.5);
+            transition: all 0.2s;
+        }
+
+        .back-button:hover img {
+            filter: grayscale(0%) opacity(1);
+            animation: iconMiamiShake 0.5s infinite ease-in-out;
+        }
+
+        @keyframes iconMiamiShake {
+            0% {
+                transform: rotate(-10deg) scale(1);
+            }
+
+            25% {
+                transform: rotate(0deg) scale(1.1);
+            }
+
+            50% {
+                transform: rotate(10deg) scale(1);
+            }
+
+            75% {
+                transform: rotate(0deg) scale(1.1);
+            }
+
+            100% {
+                transform: rotate(-10deg) scale(1);
+            }
+        }
+
+        .container {
+            display: flex;
+            gap: 120px;
+            max-width: 1400px;
+            margin: 0 auto;
+            height: calc(100vh - 100px);
+            position: relative;
+            z-index: 10;
+            padding-top: 80px;
+        }
+
+        .window-box {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border: 2px solid #b6b6b6;
+            border-radius: 4px;
+            background: #f5f5f5;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .window-box.hidden {
+            display: none !important;
+        }
+
+        .title-bar {
+            width: 100%;
+            height: 32px;
+            background: #e0e0e0;
+            border-bottom: 2px solid #b1b1b1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 12px;
+            user-select: none;
+        }
+
+        .window-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #555;
+            font-family: 'PIXEL', sans-serif;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 0;
+            height: 100%;
+            align-items: center;
+        }
+
+        .fake-btn {
+            width: 30px;
+            height: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            color: #868686;
+            border-radius: 4px;
+            opacity: 0.9;
+        }
+
+        .fake-btn.minimize {
+            padding-top: 4px;
+            font-weight: bold;
+        }
+
+        .fake-btn.maximize {
+            font-size: 12px;
+        }
+
+        .fake-btn.close {
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .fake-btn.close:hover {
+            background-color: #ff5555;
+            color: white;
+        }
+
+        .iframe-container {
+            flex: 1;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .left-content {
+            width: 400px;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            flex-direction: column;
+            gap: 20px;
+            margin-right: auto;
+            margin-left: -50px;
+        }
+
+        .ask-title {
+            font-family: 'PIXEL', sans-serif;
+            font-size: 24px;
+            font-weight: normal;
+            color: #aaaaaa;
+            text-align: center;
+        }
+
+        .ask-button {
+            display: block;
+            width: 300px;
+            height: 300px;
+        }
+
+        .ask-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: grayscale(100%) opacity(0.5);
+            transition: all 0.2s;
+        }
+
+        .ask-button:hover img {
+            filter: grayscale(0%) opacity(1);
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+                align-items: center !important;
+                padding-top: 50px !important;
+                margin-top: 0 !important;
+                gap: 5px !important;
+            }
+
+            .window-box {
+                width: 85vw !important;
+                min-height: 500px !important;
+                height: auto !important;
+            }
+
+            .left-content {
+                display: flex !important;
+                width: 100% !important;
+                margin-left: 0 !important;
+                margin-bottom: 0 !important;
+                padding: 20px !important;
+                gap: 15px !important;
+                flex-direction: column !important;
+                align-items: center !important;
+            }
+
+            #murder-bg {
+                left: 50% !important;
+                top: 65% !important;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            body {
+                overflow-x: hidden;
+                min-height: 100vh;
+                padding: 0;
+            }
+
+            .back-button {
+                width: 40px !important;
+                height: 40px !important;
+                top: 15px !important;
+                left: 15px !important;
+                position: fixed !important;
+            }
+
+            .container {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+                gap: 20px !important;
+                height: auto !important;
+                padding-top: 60px;
+                padding-bottom: 100px;
+                align-items: center !important;
+            }
+
+            .left-content {
+                display: flex !important;
+                width: 100% !important;
+                margin-left: 0 !important;
+                margin-bottom: 0 !important;
+                padding: 15px !important;
+                gap: 10px !important;
+                flex-direction: column !important;
+                align-items: center !important;
+            }
+
+            .ask-title {
+                font-family: 'PIXEL', sans-serif;
+                font-size: 18px;
+                margin-bottom: 5px;
+            }
+
+            .ask-button {
+                width: 180px;
+                height: 180px;
+            }
+
+            .window-box.hidden {
+                display: none !important;
+            }
+
+            .window-box {
+                display: flex !important;
+                width: 85vw !important;
+                height: 450px !important;
+                min-height: 350px !important;
+                flex-direction: column !important;
+                border: 2px solid #b6b6b6 !important;
+                border-radius: 4px !important;
+                background: #f5f5f5 !important;
+                position: relative !important;
+                z-index: 10 !important;
+            }
+
+            .window-box.hidden {
+                display: none !important;
+            }
+
+            .iframe-container {
+                flex: 1 !important;
+                width: 100% !important;
+                height: auto !important;
+                min-height: 300px !important;
+            }
+
+            .iframe-container iframe {
+                width: 100% !important;
+                height: 100% !important;
+                min-height: 300px !important;
+            }
+
+            #murder-bg {
+                width: 70% !important;
+                top: 60% !important;
+                left: 50% !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 返回主页按钮（图片形式） -->
+    <a href="index.html" class="back-button">
+        <img src="test/ICON/HOME.PNG" data-i18n-alt="return-home" alt="返回主页">
+    </a>
+
+    <!-- 语言切换按钮 -->
+    <div id="lang-toggle-btn">
+        <button id="lang-zh-btn" class="lang-btn" onclick="setLanguage('zh')">中文</button>
+        <button id="lang-en-btn" class="lang-btn" onclick="setLanguage('en')">EN</button>
+    </div>
+
+    <!-- 整个网站的"可缩放世界" -->
+    <div id="site-scale-layer">
+        <!-- 网站本体背景 -->
+        <img id="murder-bg" src="test/MURDER.png" alt="MURDER" />
+
+        <!-- 双窗口容器 -->
+        <div class="container">
+            <!-- 左侧：提问箱内容（无外框） -->
+            <div class="left-content">
+                <h2 class="ask-title" data-i18n="ask-box-entry">提问箱入口</h2>
+                <a href="https://box.tama.guru/_/ASK_GOA" target="_blank" class="ask-button">
+                    <img src="test/ASKBOX/BOX.png" data-i18n-alt="alt-ask-box" alt="提问箱">
+                </a>
+            </div>
+
+            <!-- 右侧：留言板窗口 -->
+            <div class="window-box" id="guestbook-window">
+                <!-- 标题栏 -->
+                <div class="title-bar">
+                    <div class="window-title">GUESTBOOK.html</div>
+                    <div class="window-controls">
+                        <span class="fake-btn minimize">—</span>
+                        <span class="fake-btn maximize">□</span>
+                        <span class="fake-btn close" onclick="closeGuestbookWindow()">×</span>
+                    </div>
+                </div>
+
+                <!-- 留言板 iframe -->
+                <div class="iframe-container">
+                    <iframe src="https://goaplaza.atabook.org/"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function closeGuestbookWindow() {
+            document.getElementById('guestbook-window').classList.add('hidden');
+        }
+
+        function setGuestbookScale(ratio) {
+            document.getElementById('site-scale-layer').style.transform =
+                `scale(${ratio})`;
+        }
+    </script>
+
+    <script>
+        initLanguage();
+    </script>
+
+</body>
+
+</html>

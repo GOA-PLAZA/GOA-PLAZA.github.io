@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>杂谈漫画 - GOA-PLAZA</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="language.js"></script>
+</head>
+
+<body>
+
+    <style>
+        body {
+            background-image: url('test/WHEE.png');
+            background-size: auto 300px;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+    </style>
+
+    <a href="index.html" class="back-button">
+        <img src="test/ICON/HOME.PNG" data-i18n-alt="return-home" alt="返回主页">
+    </a>
+
+    <div id="lang-toggle-btn">
+        <button id="lang-zh-btn" class="lang-btn" onclick="setLanguage('zh')">中文</button>
+        <button id="lang-en-btn" class="lang-btn" onclick="setLanguage('en')">EN</button>
+    </div>
+
+    <div class="column-container">
+        <div class="column-window" id="talk-comics-window">
+            <div class="drag-bar column-drag-bar">
+                <div class="window-title"> RANDOM COMICS.exe</div>
+                <div class="window-controls">
+                    <span class="fake-btn minimize">—</span>
+                    <span class="fake-btn maximize">□</span>
+                    <span class="fake-btn close" onclick="closeTalkComicsWindow()">×</span>
+                </div>
+            </div>
+            <div class="column-content">
+                <div class="tag-filter">
+                    <span class="tag-label" data-i18n="filter-label">筛选:</span>
+                    <span class="tag-filter-btn active" data-tag="all" data-i18n="filter-all">全部</span>
+                    <span class="tag-filter-btn" data-tag="杂谈" data-i18n="filter-chat">杂谈</span>
+                    <span class="tag-filter-btn" data-tag="日常生活" data-i18n="filter-daily">日常生活</span>
+                    <span class="tag-filter-btn" data-tag="创作" data-i18n="filter-creation">创作</span>
+                </div>
+                <div class="sort-controls">
+                    <span class="sort-label" data-i18n="sort-label">排序:</span>
+                    <span class="sort-btn active" data-sort="desc" data-i18n="sort-desc">顺序</span>
+                    <span class="sort-btn" data-sort="asc" data-i18n="sort-asc">倒序</span>
+                </div>
+                <div class="featured-controls">
+                    <label class="featured-checkbox">
+                        <input type="checkbox" id="featured-toggle">
+                        <span class="featured-label" data-i18n="featured-label">精选</span>
+                    </label>
+                </div>
+                <div class="article-list">
+
+                    <article class="article-card" data-tags="杂谈" data-featured="true" data-content='
+                            <img src="GOA-COMIC/屎的杂谈1.webp">
+                            <img src="GOA-COMIC/屎的杂谈2.webp">
+                        '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/屎的杂谈1.webp" alt="缩略图" class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">屎的杂谈</h3>
+                                <p class="article-excerpt">味道很大的一篇</p>
+                                <span class="article-date">2025-11-11</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="日常生活" data-content='
+                            <img src="GOA-COMIC/FISH1.webp">
+                            <img src="GOA-COMIC/FISH2.webp">
+                        '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/FISH1.webp" alt="缩略图" class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">邪修钓鱼</h3>
+                                <p class="article-excerpt">在成都玩的事</p>
+                                <span class="article-date">2025-3-26</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="日常生活" data-featured="true" data-content='
+                            <img src="GOA-COMIC/游泳1.webp">
+                            <img src="GOA-COMIC/游泳2.webp">
+                        '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="test/GOA.png" alt="文章预览图" class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">赛水娘</h3>
+                                <p class="article-excerpt">倒也确实是差不多的东西</p>
+                                <span class="article-date">2025-8-26</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="日常生活" data-content='
+                            <img src="GOA-COMIC/HUAN1.webp">
+                            <img src="GOA-COMIC/HUAN2.webp">
+                            <img src="GOA-COMIC/HUAN3.webp">
+                        '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="test/GOA.png" alt="文章预览图" class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">幻视</h3>
+                                <p class="article-excerpt">似是故人来</p>
+                                <span class="article-date">2025-4-27</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="杂谈" data-featured="true" data-content='
+                            <img src="GOA-COMIC/MING1.webp">
+                            <img src="GOA-COMIC/MING2.webp">
+                        '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="test/GOA.png" alt="文章预览图" class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">冥想时间</h3>
+                                <p class="article-excerpt">我是谁我在哪</p>
+                                <span class="article-date">2025-3-3</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="创作" data-content='
+                        <img src="GOA-COMIC/6.14-LOVEYOURSELF.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/6.14-LOVEYOURSELF.webp" alt="缩略图"
+                                    class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">LOVE YOURSELF</h3>
+                                <p class="article-excerpt">恨啊</p>
+                                <span class="article-date">2025-1-1</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="创作" data-content='
+                        <img src="GOA-COMIC/2024/YES-I-CAN.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2024/YES-I-CAN.webp" alt="缩略图"
+                                    class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">YES I CAN</h3>
+                                <p class="article-excerpt">no i can't</p>
+                                <span class="article-date">2024-12-10</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="杂谈" data-featured="true"
+                        data-content-images='["GOA-COMIC/2024/师傅别走.webp"]' data-content='
+                        <img src="GOA-COMIC/2024/师傅别走.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2024/师傅别走.webp" alt="缩略图" class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">师傅别走</h3>
+                                <p class="article-excerpt">（消散）</p>
+                                <span class="article-date">2024-5-27</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="创作" data-content='
+                        <img src="GOA-COMIC/2024/5.27-学会思考.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2024/5.27-学会思考.webp" alt="缩略图"
+                                    class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">学会思考</h3>
+                                <p class="article-excerpt">思考</p>
+                                <span class="article-date">2024-5-27</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="创作" data-content='
+                        <img src="GOA-COMIC/2024/灵光一现.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2024/灵光一现.webp" alt="缩略图" class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">灵光一现</h3>
+                                <p class="article-excerpt">寄</p>
+                                <span class="article-date">2024-6-4</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="杂谈" data-content='
+                        <img src="GOA-COMIC/2024/爬行.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2024/爬行.webp" alt="缩略图" class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">爬行</h3>
+                                <p class="article-excerpt">健康</p>
+                                <span class="article-date">2024-7-31</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="杂谈" data-featured="true" data-content='
+                        <img src="GOA-COMIC/2024/穿戴甲.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2024/穿戴甲.webp" alt="缩略图" class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">穿戴甲</h3>
+                                <p class="article-excerpt">能不能流行这个</p>
+                                <span class="article-date">2024-9-2</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="创作"
+                        data-content-images='["GOA-COMIC/2023/10.19-已经合法40+年的雄性幼女.webp"]' data-content='
+                        <img src="GOA-COMIC/2023/10.19-已经合法40+年的雄性幼女.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2023/10.19-已经合法40+年的雄性幼女.webp" alt="缩略图"
+                                    class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">已经合法40+年的雄性幼女</h3>
+                                <p class="article-excerpt">难道不是吗</p>
+                                <span class="article-date">2023-10-19</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="创作" data-content='
+                        <img src="GOA-COMIC/2023/12.22-头脑Q&A.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2023/12.22-头脑Q&A.webp" alt="缩略图"
+                                    class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">头脑Q&A</h3>
+                                <p class="article-excerpt">抱歉</p>
+                                <span class="article-date">2023-12-22</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="日常生活" data-content='
+                        <img src="GOA-COMIC/2023/12.6-机器童工.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2023/12.6-机器童工.webp" alt="缩略图"
+                                    class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">机器童工</h3>
+                                <p class="article-excerpt">这样不对吧</p>
+                                <span class="article-date">2023-12-6</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="日常生活" data-featured="true" data-content='
+                        <img src="GOA-COMIC/2023/12.6-赛博朋克.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2023/12.6-赛博朋克.webp" alt="缩略图"
+                                    class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">赛博朋克</h3>
+                                <p class="article-excerpt">这样不好吧</p>
+                                <span class="article-date">2023-12-6</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="日常生活"
+                        data-content-images='["GOA-COMIC/2023/12.9-济州岛一日状态.webp"]' data-content='
+                        <img src="GOA-COMIC/2023/12.9-济州岛一日状态.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2023/12.9-济州岛一日状态.webp" alt="缩略图"
+                                    class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">济州岛一日状态</h3>
+                                <p class="article-excerpt">怀念</p>
+                                <span class="article-date">2023-12-9</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="杂谈" data-featured="true" data-content='
+                        <img src="GOA-COMIC/2023/4.4-OCD-1.webp">
+                        <img src="GOA-COMIC/2023/4.4-OCD-2.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2023/4.4-OCD-1.webp" alt="缩略图"
+                                    class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">OCD</h3>
+                                <p class="article-excerpt">以前的事</p>
+                                <span class="article-date">2023-4-4</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="日常生活" data-featured="true"
+                        data-content-images='["GOA-COMIC/2023/6.18-普陀垃圾桶.webp"]' data-content='
+                        <img src="GOA-COMIC/2023/6.18-普陀垃圾桶.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2023/6.18-普陀垃圾桶.webp" alt="缩略图"
+                                    class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">普陀垃圾桶</h3>
+                                <p class="article-excerpt">我觉得这很神圣啊</p>
+                                <span class="article-date">2023-6-18</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="日常生活" data-featured="true"
+                        data-content-images='["GOA-COMIC/2023/6.18-水灭之刃.webp"]' data-content='
+                        <img src="GOA-COMIC/2023/6.18-水灭之刃.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2023/6.18-水灭之刃.webp" alt="缩略图"
+                                    class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">水灭之刃</h3>
+                                <p class="article-excerpt">没睡醒</p>
+                                <span class="article-date">2023-6-18</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="日常生活" data-content='
+                        <img src="GOA-COMIC/2023/7.20-拦截.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2023/7.20-拦截.webp" alt="缩略图" class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">人墙</h3>
+                                <p class="article-excerpt">拦截</p>
+                                <span class="article-date">2023-7-20</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="创作"
+                        data-content-images='["GOA-COMIC/2023/7.21-我好像忘了怎么画画了.webp"]' data-content='
+                        <img src="GOA-COMIC/2023/7.21-我好像忘了怎么画画了.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2023/7.21-我好像忘了怎么画画了.webp" alt="缩略图"
+                                    class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">我好像忘了怎么画画了</h3>
+                                <p class="article-excerpt">对吗对的对的不对啊</p>
+                                <span class="article-date">2023-7-21</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="创作" data-content='
+                        <img src="GOA-COMIC/2023/8.5-思考者.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2023/8.5-思考者.webp" alt="缩略图" class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">思考者</h3>
+                                <p class="article-excerpt">重要的事情</p>
+                                <span class="article-date">2023-8-5</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="日常生活" data-content='
+                        <img src="GOA-COMIC/2022/2.4-瞬移.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2022/2.4-瞬移.webp" alt="缩略图" class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">瞬移</h3>
+                                <p class="article-excerpt">小猫咪永远先你一步</p>
+                                <span class="article-date">2022-2-4</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="创作" data-featured="true"
+                        data-content-images='["GOA-COMIC/2022/4.29-弗洛伊德.webp"]' data-content='
+                        <img src="GOA-COMIC/2022/4.29-弗洛伊德.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2022/4.29-弗洛伊德.webp" alt="缩略图"
+                                    class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">弗洛伊德</h3>
+                                <p class="article-excerpt">我的意思是</p>
+                                <span class="article-date">2022-4-29</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="杂谈" data-featured="true"
+                        data-content-images='["GOA-COMIC/2022/5.4-奔跑吧.webp"]' data-content='
+                        <img src="GOA-COMIC/2022/5.4-奔跑吧.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2022/5.4-奔跑吧.webp" alt="缩略图" class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">奔跑吧</h3>
+                                <p class="article-excerpt">野人基因作祟</p>
+                                <span class="article-date">2022-5-4</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="日常生活"
+                        data-content-images='["GOA-COMIC/2022/7.9-英雄母亲.webp"]' data-content='
+                        <img src="GOA-COMIC/2022/7.9-英雄母亲.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2022/7.9-英雄母亲.webp" alt="缩略图" class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">英雄母亲</h3>
+                                <p class="article-excerpt">童养媳宝宝</p>
+                                <span class="article-date">2022-7-9</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="杂谈" data-featured="true"
+                        data-content-images='["GOA-COMIC/2021/8.12-失眠搏斗-1.webp", "GOA-COMIC/2021/8.12-失眠搏斗-2.webp"]'
+                        data-content='
+                        <img src="GOA-COMIC/2021/8.12-失眠搏斗-1.webp">
+                        <img src="GOA-COMIC/2021/8.12-失眠搏斗-2.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2021/8.12-失眠搏斗-1.webp" alt="缩略图"
+                                    class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">失眠搏斗</h3>
+                                <p class="article-excerpt">高达驾驶员袭击高达</p>
+                                <span class="article-date">2021-8-12</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="日常生活" data-content-images='["GOA-COMIC/2021/8.29-按摩.webp"]'
+                        data-content='
+                        <img src="GOA-COMIC/2021/8.29-按摩.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2021/8.29-按摩.webp" alt="缩略图" class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">按摩</h3>
+                                <p class="article-excerpt">把我冲走吧</p>
+                                <span class="article-date">2021-8-29</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="杂谈" data-content-images='["GOA-COMIC/2021/8.5-按R键醒来.webp"]'
+                        data-content='
+                        <img src="GOA-COMIC/2021/8.5-按R键醒来.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2021/8.5-按R键醒来.webp" alt="缩略图"
+                                    class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">按R键醒来</h3>
+                                <p class="article-excerpt">failed</p>
+                                <span class="article-date">2021-8-5</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="杂谈" data-content-images='["GOA-COMIC/2021/9.5-蚊子鬼.webp"]'
+                        data-content='
+                        <img src="GOA-COMIC/2021/9.5-蚊子鬼.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2021/9.5-蚊子鬼.webp" alt="缩略图" class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">蚊子鬼</h3>
+                                <p class="article-excerpt">嗡嗡</p>
+                                <span class="article-date">2021-9-5</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="杂谈" data-featured="true"
+                        data-content-images='["GOA-COMIC/2021/12.1-心想事成.webp"]' data-content='
+                        <img src="GOA-COMIC/2021/12.1-心想事成.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2021/12.1-心想事成.webp" alt="缩略图"
+                                    class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">心想事成</h3>
+                                <p class="article-excerpt">STRONG</p>
+                                <span class="article-date">2021-12-1</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="杂谈" data-featured="true"
+                        data-content-images='["GOA-COMIC/2020/10.21-蛾蚋战争-1.webp", "GOA-COMIC/2020/10.21-蛾蚋战争-2.webp"]'
+                        data-content='
+                        <img src="GOA-COMIC/2020/10.21-蛾蚋战争-1.webp">
+                        <img src="GOA-COMIC/2020/10.21-蛾蚋战争-2.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2020/10.21-蛾蚋战争-1.webp" alt="缩略图"
+                                    class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">蛾蚋战争</h3>
+                                <p class="article-excerpt">全部驱逐出去</p>
+                                <span class="article-date">2020-10-21</span>
+                            </div>
+                        </a>
+                    </article>
+
+                    <article class="article-card" data-tags="创作" data-content-images='["GOA-COMIC/2021/6.30-监控核心.webp"]'
+                        data-content='
+                        <img src="GOA-COMIC/2021/6.30-监控核心.webp">
+                    '>
+                        <a href="#" class="article-link">
+                            <div class="article-image-wrapper">
+                                <img data-src="GOA-COMIC/2021/6.30-监控核心.webp" alt="缩略图"
+                                    class="article-image auto-thumb">
+                                <div class="article-overlay"></div>
+                            </div>
+                            <div class="article-info">
+                                <div class="article-tags">
+                                </div>
+                                <h3 class="article-title">监控核心</h3>
+                                <p class="article-excerpt">回来吧我的荣耀</p>
+                                <span class="article-date">2021-6-30</span>
+                            </div>
+                        </a>
+                    </article>
+
+                </div>
+
+                <div class="pagination">
+                    <div class="page-controls">
+                        <button class="page-btn" id="first-page">«</button>
+                        <button class="page-btn" id="prev-page">‹</button>
+                        <div class="page-numbers" id="page-numbers"></div>
+                        <button class="page-btn" id="next-page">›</button>
+                        <button class="page-btn" id="last-page">»</button>
+                    </div>
+                    <span class="page-info">第 <span id="current-page">1</span> 页 / 共 <span id="total-pages">1</span>
+                        页</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="article-popup" id="article-popup">
+        <div class="popup-drag-bar" id="popup-drag-bar">
+            <div class="window-title" id="popup-title">文章标题</div>
+            <div class="window-controls">
+                <span class="fake-btn minimize">—</span>
+                <span class="fake-btn maximize">□</span>
+                <span class="fake-btn close" id="popup-close">×</span>
+            </div>
+        </div>
+        <div class="popup-content" id="popup-content">
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            document.querySelectorAll('.article-card').forEach(article => {
+                const img = article.querySelector('.auto-thumb');
+                if (img && article.dataset.contentImages) {
+                    try {
+                        const images = JSON.parse(article.dataset.contentImages);
+                        if (images.length > 0) {
+                            img.src = images[0];
+                        }
+                    } catch (e) {
+                        console.error('解析图片失败:', e);
+                    }
+                }
+            });
+        })();
+
+        (function () {
+            const articlesPerPage = 5;
+            let currentPage = 1;
+            let totalPages = 1;
+            let activeTag = 'all';
+            let sortOrder = 'desc';
+            let showFeaturedOnly = false;
+
+            const articles = document.querySelectorAll('.article-card');
+            const currentPageEl = document.getElementById('current-page');
+            const totalPagesEl = document.getElementById('total-pages');
+            const prevBtn = document.getElementById('prev-page');
+            const nextBtn = document.getElementById('next-page');
+            const firstBtn = document.getElementById('first-page');
+            const lastBtn = document.getElementById('last-page');
+            const pageNumbersEl = document.getElementById('page-numbers');
+            const filterBtns = document.querySelectorAll('.tag-filter-btn');
+            const sortBtns = document.querySelectorAll('.sort-btn');
+            const featuredToggle = document.getElementById('featured-toggle');
+
+            function getVisibleArticles() {
+                let filtered = Array.from(articles).filter(article => {
+                    if (activeTag === 'all') return true;
+                    const tags = article.dataset.tags.split(',');
+                    return tags.includes(activeTag);
+                });
+
+                if (showFeaturedOnly) {
+                    filtered = filtered.filter(article => article.dataset.featured === 'true');
+                }
+
+                filtered.sort((a, b) => {
+                    const dateA = new Date(a.querySelector('.article-date').textContent);
+                    const dateB = new Date(b.querySelector('.article-date').textContent);
+                    return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+                });
+
+                return filtered;
+            }
+
+            function updatePagination() {
+                const visibleArticles = getVisibleArticles();
+                totalPages = Math.ceil(visibleArticles.length / articlesPerPage);
+                if (totalPages < 1) totalPages = 1;
+                currentPageEl.textContent = currentPage;
+                totalPagesEl.textContent = totalPages;
+                prevBtn.disabled = currentPage <= 1;
+                nextBtn.disabled = currentPage >= totalPages;
+                firstBtn.disabled = currentPage <= 1;
+                lastBtn.disabled = currentPage >= totalPages;
+
+                renderPageNumbers();
+                renderArticles(visibleArticles);
+            }
+
+            function renderPageNumbers() {
+                pageNumbersEl.innerHTML = '';
+                for (let i = 1; i <= totalPages; i++) {
+                    const btn = document.createElement('button');
+                    btn.className = 'page-number' + (i === currentPage ? ' active' : '');
+                    btn.textContent = i;
+                    btn.addEventListener('click', () => {
+                        currentPage = i;
+                        updatePagination();
+                    });
+                    pageNumbersEl.appendChild(btn);
+                }
+            }
+
+            function renderArticles(visibleArticles) {
+                const list = document.querySelector('.article-list');
+
+                list.innerHTML = '';
+
+                const start = (currentPage - 1) * articlesPerPage;
+                const end = start + articlesPerPage;
+
+                const tagClasses = {
+                    '杂谈': 'tag-talk',
+                    '日常生活': 'tag-daily',
+                    '创作': 'tag-creation'
+                };
+
+                visibleArticles.slice(start, end).forEach(article => {
+                    article.style.display = 'block';
+
+                    const img = article.querySelector('.auto-thumb');
+                    const title = article.querySelector('.article-title').textContent;
+
+                    const tagsContainer = article.querySelector('.article-tags');
+                    if (tagsContainer && article.dataset.tags) {
+                        const tagClass = tagClasses[article.dataset.tags] || 'tag-creation';
+                        tagsContainer.innerHTML = `<span class="tag ${tagClass}">${article.dataset.tags}</span>`;
+                    }
+
+                    if (article.dataset.featured === 'true' && tagsContainer) {
+                        tagsContainer.innerHTML += `<span class="tag tag-featured">精选</span>`;
+                    }
+
+                    if (img) {
+                        let thumbSrc = null;
+
+                        if (article.dataset.content) {
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = article.dataset.content;
+                            const firstImg = tempDiv.querySelector('img');
+                            if (firstImg) {
+                                thumbSrc = firstImg.src;
+                            }
+                        }
+
+                        if (!thumbSrc && article.dataset.contentImages) {
+                            try {
+                                const images = JSON.parse(article.dataset.contentImages);
+                                if (images.length > 0) {
+                                    thumbSrc = images[0];
+                                }
+                            } catch (e) { }
+                        }
+
+                        if (thumbSrc) {
+                            img.src = thumbSrc;
+                        }
+                    }
+
+                    list.appendChild(article);
+                });
+            }
+
+            prevBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updatePagination();
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updatePagination();
+                }
+            });
+
+            firstBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage = 1;
+                    updatePagination();
+                }
+            });
+
+            lastBtn.addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage = totalPages;
+                    updatePagination();
+                }
+            });
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    activeTag = btn.dataset.tag;
+                    currentPage = 1;
+                    updatePagination();
+                });
+            });
+
+            sortBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    sortBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    sortOrder = btn.dataset.sort;
+                    currentPage = 1;
+                    updatePagination();
+                });
+            });
+
+            if (featuredToggle) {
+                featuredToggle.addEventListener('change', () => {
+                    showFeaturedOnly = featuredToggle.checked;
+                    currentPage = 1;
+                    updatePagination();
+                });
+            }
+
+            updatePagination();
+        })();
+
+        (function () {
+            const popup = document.getElementById('article-popup');
+            const popupTitle = document.getElementById('popup-title');
+            const popupContent = document.getElementById('popup-content');
+            const popupClose = document.getElementById('popup-close');
+            const popupDragBar = document.getElementById('popup-drag-bar');
+            const articleLinks = document.querySelectorAll('.article-link');
+
+            document.querySelector('.article-list').addEventListener('click', function (e) {
+                const link = e.target.closest('.article-link');
+                if (!link) return;
+
+                e.preventDefault();
+
+                const article = link.closest('.article-card');
+                const title = article.querySelector('.article-title').textContent;
+                const excerpt = article.querySelector('.article-excerpt').textContent;
+                const date = article.querySelector('.article-date').textContent;
+
+                const tagClasses = {
+                    '杂谈': 'tag-talk',
+                    '日常生活': 'tag-daily',
+                    '创作': 'tag-creation'
+                };
+                const tagClass = tagClasses[article.dataset.tags] || 'tag-creation';
+                const tags = `<div class="article-tags"><span class="tag ${tagClass}">${article.dataset.tags}</span></div>`;
+
+                const contentImagesAttr = article.dataset.contentImages;
+                let firstImage = article.querySelector('.article-image').src;
+                if (contentImagesAttr) {
+                    try {
+                        const images = JSON.parse(contentImagesAttr);
+                        if (images.length > 0) {
+                            firstImage = images[0];
+                        }
+                    } catch (err) {
+                        console.error('解析图片数组失败:', err);
+                    }
+                }
+
+                popupTitle.textContent = title;
+
+                let fullContent = '';
+                if (article.dataset.content) {
+                    fullContent = `<div class="popup-full-content">${article.dataset.content}</div>`;
+                } else {
+                    fullContent = `<div class="popup-full-content">
+                        <p>暂无完整内容</p>
+                    </div>`;
+                }
+
+                popupContent.innerHTML = `
+                    <div class="popup-tags">${tags}</div>
+                    <p class="popup-excerpt">${excerpt}</p>
+                    <div class="popup-date">${date}</div>
+                    ${fullContent}
+                `;
+
+                popup.style.display = 'flex';
+            });
+
+            popupClose.addEventListener('click', () => {
+                popup.style.display = 'none';
+            });
+
+            let isDragging = false;
+            let startX, startY;
+            let startLeft, startTop;
+
+            popupDragBar.addEventListener('mousedown', (e) => {
+                if (e.target.closest('.fake-btn')) return;
+
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+
+                const style = window.getComputedStyle(popup);
+                startLeft = parseInt(style.left) || 0;
+                startTop = parseInt(style.top) || 0;
+
+                popupDragBar.style.cursor = 'grabbing';
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+
+                const deltaX = e.clientX - startX;
+                const deltaY = e.clientY - startY;
+
+                popup.style.left = (startLeft + deltaX) + 'px';
+                popup.style.top = (startTop + deltaY) + 'px';
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                popupDragBar.style.cursor = 'move';
+            });
+        })();
+
+        function closeTalkComicsWindow() {
+            document.getElementById('talk-comics-window').style.display = 'none';
+        }
+    </script>
+    <script>
+        initLanguage();
+    </script>
+</body>
+
+</html>

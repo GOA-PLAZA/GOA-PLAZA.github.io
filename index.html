@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOA-PLAZA</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="language.js"></script>
+
+    <!-- 信息告知弹窗 -->
+    <div class="info-popup" id="commission-popup">
+        <!-- 拖动把手 -->
+        <div class="drag-bar popup-drag-bar">
+            <!-- 左边：窗口标题 -->
+            <div class="window-title">COMMISSION_INFO.txt</div>
+            <!-- 右边：按钮组 -->
+            <div class="window-controls">
+                <span class="fake-btn minimize">—</span>
+                <span class="fake-btn maximize">□</span>
+                <span class="fake-btn close" onclick="closeCommissionPopup()">×</span>
+            </div>
+        </div>
+
+        <!-- 弹窗内容区域 -->
+        <div class="popup-content">
+            <h2 data-i18n="commission-title">委托信息</h2>
+            <p data-i18n="commission-paused-msg">📢 目前邮箱委托暂停</p>
+            <p data-i18n="commission-drop-msg">偶尔在以下场所掉落零碎稿件：</p>
+            <ul>
+                <li data-i18n="commission-place-1">米画师</li>
+                <li data-i18n="commission-place-2">QQ群🧀1049447151</li>
+            </ul>
+
+            <!-- 可以自定义你想显示的内容 -->
+        </div>
+    </div>
+
+    <!-- 关于我弹窗 -->
+    <div class="info-popup" id="about-me-popup">
+        <div class="drag-bar popup-drag-bar">
+            <div class="window-title">ABOUT-ME.png</div>
+            <div class="window-controls">
+                <span class="fake-btn minimize">—</span>
+                <span class="fake-btn maximize">□</span>
+                <span class="fake-btn close" onclick="closeAboutMePopup()">×</span>
+            </div>
+        </div>
+        <div class="popup-content">
+            <img src="test/ICON/ABOUT-ME.png" style="max-width: 100%; height: auto;">
+        </div>
+    </div>
+
+    <!-- OC弹窗遮罩层 -->
+    <div id="oc-overlay"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;">
+    </div>
+
+    <!-- OC弹窗 -->
+    <div class="info-popup" id="oc-popup">
+        <div class="drag-bar popup-drag-bar">
+            <div class="window-title">NOTICE</div>
+            <div class="window-controls">
+                <span class="fake-btn minimize">—</span>
+                <span class="fake-btn maximize">□</span>
+                <span class="fake-btn close" onclick="closeOCPopup()">×</span>
+            </div>
+        </div>
+        <div class="popup-content oc-popup-content">
+            <div class="oc-message">
+                <span class="oc-warning">⚠️</span>
+                <div class="oc-text">
+                    <p data-i18n="oc-not-ready">目前，该站点的OC页面暂未制作，</p>
+                    <p data-i18n="oc-notion-prompt">你愿意跳转到notion制作的简陋版吗？</p>
+                </div>
+            </div>
+            <div class="oc-buttons">
+                <button class="oc-btn" onclick="goToNotion()" data-i18n="oc-yes">YES</button>
+                <button class="oc-btn" onclick="closeOCPopup()" data-i18n="oc-no">NO</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 代码 -->
+    <script>
+        let popupZIndex = 10000;
+
+        function bringToFront(popupId) {
+            const popup = document.getElementById(popupId);
+            popupZIndex++;
+            popup.style.zIndex = popupZIndex;
+        }
+
+        // 打开委托弹窗
+        function openCommissionPopup() {
+            document.getElementById('commission-popup').style.display = 'block';
+            bringToFront('commission-popup');
+        }
+
+        // 关闭委托弹窗
+        function closeCommissionPopup() {
+            document.getElementById('commission-popup').style.display = 'none';
+        }
+
+        // 打开关于我弹窗
+        function openAboutMePopup() {
+            document.getElementById('about-me-popup').style.display = 'block';
+            bringToFront('about-me-popup');
+        }
+
+        // 关闭关于我弹窗
+        function closeAboutMePopup() {
+            document.getElementById('about-me-popup').style.display = 'none';
+        }
+
+        // 打开OC弹窗
+        function openOCPopup() {
+            popupZIndex = Math.max(popupZIndex, 11000);
+
+            const commissionPopup = document.getElementById('commission-popup');
+            const aboutMePopup = document.getElementById('about-me-popup');
+            const petWindow = document.getElementById('draggable-pet');
+
+            if (commissionPopup.style.display !== 'none') {
+                commissionPopup.dataset.originalZIndex = commissionPopup.style.zIndex || getComputedStyle(commissionPopup).zIndex;
+                commissionPopup.style.zIndex = 5000;
+            }
+            if (aboutMePopup.style.display !== 'none') {
+                aboutMePopup.dataset.originalZIndex = aboutMePopup.style.zIndex || getComputedStyle(aboutMePopup).zIndex;
+                aboutMePopup.style.zIndex = 5000;
+            }
+            if (petWindow.style.display !== 'none') {
+                petWindow.dataset.originalZIndex = petWindow.style.zIndex || getComputedStyle(petWindow).zIndex;
+                petWindow.style.zIndex = 5000;
+            }
+
+            document.getElementById('oc-overlay').style.display = 'block';
+            document.getElementById('oc-overlay').style.zIndex = 11000;
+            document.getElementById('oc-popup').style.display = 'block';
+            popupZIndex++;
+            document.getElementById('oc-popup').style.zIndex = popupZIndex;
+        }
+
+        // 关闭OC弹窗
+        function closeOCPopup() {
+            const commissionPopup = document.getElementById('commission-popup');
+            const aboutMePopup = document.getElementById('about-me-popup');
+            const petWindow = document.getElementById('draggable-pet');
+
+            if (commissionPopup.dataset.originalZIndex) {
+                commissionPopup.style.zIndex = commissionPopup.dataset.originalZIndex;
+                popupZIndex = Math.max(popupZIndex, parseInt(commissionPopup.dataset.originalZIndex));
+            }
+            if (aboutMePopup.dataset.originalZIndex) {
+                aboutMePopup.style.zIndex = aboutMePopup.dataset.originalZIndex;
+                popupZIndex = Math.max(popupZIndex, parseInt(aboutMePopup.dataset.originalZIndex));
+            }
+            if (petWindow.dataset.originalZIndex) {
+                petWindow.style.zIndex = petWindow.dataset.originalZIndex;
+                popupZIndex = Math.max(popupZIndex, parseInt(petWindow.dataset.originalZIndex));
+            }
+
+            document.getElementById('oc-overlay').style.display = 'none';
+            document.getElementById('oc-popup').style.display = 'none';
+        }
+
+        // 跳转到notion
+        function goToNotion() {
+            window.open('https://goa-plaza.notion.site/goa-plaza/Unspoken-Pledge-9f68573945e4420c8c9e9a0163ac5ce5', '_blank');
+            closeOCPopup();
+        }
+
+        // 弹窗拖动功能（修复版）- 委托弹窗
+        (function () {
+            const popup = document.getElementById('commission-popup');
+            const dragBar = popup.querySelector('.popup-drag-bar');
+
+            let isDragging = false;
+            let startX, startY, initialLeft, initialTop;
+
+            dragBar.addEventListener('mousedown', (e) => {
+                if (e.target.classList.contains('close')) return;
+
+                isDragging = true;
+                bringToFront('commission-popup');
+
+                startX = e.clientX;
+                startY = e.clientY;
+
+                const rect = popup.getBoundingClientRect();
+                initialLeft = rect.left;
+                initialTop = rect.top;
+
+                popup.style.transform = 'none';
+                popup.style.left = `${initialLeft}px`;
+                popup.style.top = `${initialTop}px`;
+
+                dragBar.style.cursor = 'grabbing';
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+
+                e.preventDefault();
+
+                const currentX = e.clientX;
+                const currentY = e.clientY;
+                const deltaX = currentX - startX;
+                const deltaY = currentY - startY;
+
+                popup.style.left = `${initialLeft + deltaX}px`;
+                popup.style.top = `${initialTop + deltaY}px`;
+            });
+
+            window.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    dragBar.style.cursor = 'move';
+                }
+            });
+        })();
+
+        // 弹窗拖动功能（修复版）- 关于我弹窗
+        (function () {
+            const popup = document.getElementById('about-me-popup');
+            const dragBar = popup.querySelector('.popup-drag-bar');
+
+            let isDragging = false;
+            let startX, startY, initialLeft, initialTop;
+
+            dragBar.addEventListener('mousedown', (e) => {
+                if (e.target.classList.contains('close')) return;
+
+                isDragging = true;
+                bringToFront('about-me-popup');
+
+                startX = e.clientX;
+                startY = e.clientY;
+
+                const rect = popup.getBoundingClientRect();
+                initialLeft = rect.left;
+                initialTop = rect.top;
+
+                popup.style.transform = 'none';
+                popup.style.left = `${initialLeft}px`;
+                popup.style.top = `${initialTop}px`;
+
+                dragBar.style.cursor = 'grabbing';
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+
+                e.preventDefault();
+
+                const currentX = e.clientX;
+                const currentY = e.clientY;
+                const deltaX = currentX - startX;
+                const deltaY = currentY - startY;
+
+                popup.style.left = `${initialLeft + deltaX}px`;
+                popup.style.top = `${initialTop + deltaY}px`;
+            });
+
+            window.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    dragBar.style.cursor = 'move';
+                }
+            });
+        })();
+    </script>
+
+<body>
+
+    <!-- 这是主容器，用来把所有内容居中 -->
+    <div class="main-container">
+
+        <nav class="circle-menu">
+
+            <!-- 第 1 个小人：style="--i:1" -->
+            <a href="javascript:void(0);" onclick="openAboutMePopup()" class="character" style="--i:1">
+                <img src="test/HAP.png" class="normal" alt="小人1常态">
+                <img src="test/DED.png" class="active" alt="小人1悬停">
+                <!-- 新增标题：放头顶 -->
+                <span class="col-title" data-i18n="about-me">关于我</span>
+            </a>
+
+            <!-- 第 2 个小人：改为 style="--i:2" -->
+            <a href="javascript:void(0);" onclick="openOCPopup()" class="character" style="--i:2">
+                <img src="test/MED.png" class="normal" alt="小人2常态">
+                <img src="test/DED.png" class="active" alt="小人2悬停">
+                <span class="col-title" data-i18n="oc-world">OC世界观</span>
+            </a>
+
+            <!-- 第 3 个小人：改为 style="--i:3" -->
+            <a href="guestbook.html" class="character" style="--i:3">
+                <img src="test/HOLD.png" class="normal" alt="小人3常态">
+                <img src="test/DED.png" class="active" alt="小人3悬停">
+                <span class="col-title" data-i18n="ask-guestbook">提问箱&留言板</span>
+            </a>
+
+            <!-- 第 4 个小人：改为 style="--i:4" -->
+            <a href="javascript:void(0);" onclick="openCommissionPopup()" class="character" style="--i:4">
+                <img src="test/DED.png" class="normal" alt="小人4常态">
+                <img src="test/DED.png" class="active" alt="小人4悬停">
+                <span class="col-title" data-i18n="commission-paused">委托相关(暂停中)</span>
+            </a>
+
+            <!-- 第 5 个小人：改为 style="--i:5" -->
+            <a href="talk-comics.html" class="character" style="--i:5">
+                <img src="test/SAD.png" class="normal" alt="小人5常态">
+                <img src="test/DED.png" class="active" alt="小人5悬停">
+                <!-- 新增标题：放头顶 -->
+                <span class="col-title" data-i18n="random-comics">杂谈漫画</span>
+            </a>
+
+            <div class="center-piece"></div>
+
+            <!-- --- 新增：正中间的迈阿密风格图片 --- -->
+            <!-- 记得把 src 改成你自己的图片路径 -->
+            <img src="test/GOA.png" class="center-logo" alt="Central Logo">
+        </nav>
+
+    </div>
+
+    <!-- 底部社交链接栏 -->
+    <div class="footer-dock">
+
+        <!-- 链接 1 -->
+        <a href="https://weibo.com/u/5143745410" target="_blank" class="dock-icon">
+            <!-- 记得把 src 换成你自己的图标路径 -->
+            <img src="test\ICON\WEIB.PNG" alt="weibo">
+        </a>
+
+        <!-- 链接 2 -->
+        <a href="https://www.mihuashi.com/profiles/658935" target="_blank" class="dock-icon">
+            <img src="test\ICON\MIH.PNG" alt="mihuashi">
+        </a>
+
+        <!-- 链接 3 -->
+        <a href="https://space.bilibili.com/492015?spm_id_from=333.874.0.0" target="_blank" class="dock-icon">
+            <img src="test\ICON\BILI.PNG" alt="bilibili">
+        </a>
+
+    </div>
+
+    <!-- 桌宠容器 -->
+    <div class="desk-pet" id="draggable-pet">
+        <!-- 拖动把手 -->
+        <div class="drag-bar" id="drag-header">
+            <!-- 左边：窗口标题 -->
+            <div class="window-title">GOA_PET.exe</div>
+
+            <!-- 右边：假的按钮组 -->
+            <div class="window-controls">
+                <span class="fake-btn minimize">—</span>
+                <span class="fake-btn maximize">□</span>
+                <span class="fake-btn close" onclick="shakePetCloseBtn()">×</span>
+            </div>
+        </div>
+        <!-- 你的 iframe -->
+        <iframe id="pet-iframe" width="314" height="321" scrolling="no"
+            src="https://gifypet.neocities.org/pet/pet.html?name=GOA&dob=1766684347&gender=f&element=Air&pet=https%3A%2F%2Fgoaplaza.neocities.org%2FTAMAGOCHI%2FGOACHI.GIF&map=https%3A%2F%2Fgoaplaza.neocities.org%2FTAMAGOCHI%2FBG.GIF&background=&tablecolor=black&textcolor=black"
+            frameborder="0"></iframe>
+    </div>
+
+    <!-- 语言切换按钮 -->
+    <div id="lang-toggle-btn">
+        <button id="lang-zh-btn" class="lang-btn" onclick="setLanguage('zh')">中文</button>
+        <button id="lang-en-btn" class="lang-btn" onclick="setLanguage('en')">EN</button>
+    </div>
+
+    <!-- 桌宠的 JavaScript 代码 -->
+    <script>
+        (function () {
+            const petWindow = document.getElementById("draggable-pet");
+            const dragHeader = document.getElementById("drag-header");
+            const iframe = document.getElementById("pet-iframe");
+            const closeBtn = petWindow.querySelector('.fake-btn.close');
+
+            let isDragging = false;
+            let startX, startY, initialLeft, initialTop;
+
+            closeBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                closeBtn.classList.add("shaking");
+                setTimeout(() => {
+                    closeBtn.classList.remove("shaking");
+                }, 600);
+            });
+
+            dragHeader.addEventListener("mousedown", (e) => {
+                isDragging = true;
+                bringToFront('draggable-pet');
+
+                iframe.style.pointerEvents = "none";
+
+                startX = e.clientX;
+                startY = e.clientY;
+
+                const rect = petWindow.getBoundingClientRect();
+                initialLeft = rect.left;
+                initialTop = rect.top;
+
+                dragHeader.style.cursor = "grabbing";
+            });
+
+            window.addEventListener("mousemove", (e) => {
+                if (!isDragging) return;
+
+                e.preventDefault();
+
+                const currentX = e.clientX;
+                const currentY = e.clientY;
+                const deltaX = currentX - startX;
+                const deltaY = currentY - startY;
+
+                petWindow.style.left = `${initialLeft + deltaX}px`;
+                petWindow.style.top = `${initialTop + deltaY}px`;
+            });
+
+            window.addEventListener("mouseup", () => {
+                if (isDragging) {
+                    isDragging = false;
+                    dragHeader.style.cursor = "move";
+
+                    iframe.style.pointerEvents = "auto";
+                }
+            });
+        })();
+    </script>
+
+    <script>
+        initLanguage();
+    </script>
+
+</body>
+
+</html>

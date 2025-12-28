@@ -1,0 +1,1457 @@
+/* 1. 全局重置 */
+
+/* --- 注册自定义字体 --- */
+@font-face {
+    font-family: 'PIXEL';
+    /* 注意：下面的 'font/' 必须和你的文件夹名一致，且必须用正斜杠 '/' */
+    src: url('font/fusion-pixel-12px-monospaced-zh_hans.otf.woff2');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #ffffff;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: sans-serif;
+    overflow: hidden;
+}
+
+/* 2. 圆形菜单容器 */
+.circle-menu {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    /* border: 1px dashed #ccc; 可以打开这个看圆的轨迹 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 3. 小人容器 (已修改：变小、去球) */
+.character {
+    position: absolute;
+
+    /* --- 尺寸控制 --- */
+    width: 180px;
+    /* 改小了，原来是80px */
+    height: 180px;
+    /* 改小了 */
+
+    /* --- 外观控制 --- */
+    background-color: transparent;
+    /* 透明背景 */
+    border: none;
+    /* 无边框 */
+    text-decoration: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s;
+
+    /* --- 位置计算 (核心数学) --- */
+    /* 你可以修改 15deg 这个数字：
+       - 如果想顺时针转，就加大数字（比如 30deg）
+       - 如果想逆时针转，就改小数字或变负数（比如 -10deg）
+    */
+    transform:
+        rotate(calc(360deg / 5 * var(--i) - 162deg)) translate(220px) rotate(calc(360deg / -5 * var(--i) + 162deg));
+}
+
+/* 4. 鼠标悬停效果 */
+.character:hover {
+    background-color: transparent;
+    cursor: pointer;
+    /* 删掉了所有的 transform 代码，这样鼠标放上去它就不会发生任何位移 */
+}
+
+/* 5. 图片样式 (这就是你刚才找的那段！) */
+/* 这段代码负责把你的 png 图片限制在 50x50 的框框里 */
+/* 图片通用设置：让两张图重叠在一起 */
+/* 图片通用设置 */
+/* 修改这一段 */
+.character img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    /* --- 修改动画 --- */
+    /* 1. 使用 redrawEffect */
+    /* 2. 0.8s 依然是缓慢的呼吸节奏 */
+    /* 3. steps(1) 保证是两张画之间的硬切换 */
+    animation: redrawEffect 1.4s infinite steps(1);
+
+    /* 保持随机延迟 */
+    animation-delay: calc(var(--i) * -0.3s);
+}
+
+/* --- 瞬间切图逻辑 --- */
+
+/* 1. 平时状态 */
+.character .normal {
+    display: block;
+    /* 只要 block，就是直接显示 */
+}
+
+.character .active {
+    display: none;
+    /* none 表示完全消失，不占位 */
+}
+
+/* 2. 鼠标悬停状态 */
+.character:hover .normal {
+    display: none;
+    /* 瞬间消失 */
+}
+
+.character:hover .active {
+    display: block;
+    /* 瞬间出现 */
+}
+
+.character[style*="--i:3"] {
+    transform:
+        /* 关键在 - 25deg：这是让他往右边分开的度数 */
+        rotate(calc(360deg / 5 * var(--i) - 162deg - 10deg)) translate(180px)
+        /* 保持这个高度不变 */
+        /* 下面这行是为了保证小人头是正的，要把上面的度数抵消掉 */
+        rotate(calc((360deg / 5 * var(--i) - 162deg - 10deg) * -1));
+}
+
+
+.character[style*="--i:4"] {
+    transform:
+        /* 关键在 + 25deg：这是让他往左边分开的度数 */
+        rotate(calc(360deg / 5 * var(--i) - 162deg + 10deg)) translate(180px)
+        /* 保持这个高度不变 */
+        /* 同样，反向旋转让头变正 */
+        rotate(calc((360deg / 5 * var(--i) - 162deg + 10deg) * -1));
+}
+
+/* --- 迈阿密热线风格中间图 --- */
+
+.center-logo {
+    position: absolute;
+
+    /* --- 1. 怎么往上移？ --- */
+    /* 原来是 50%，数字越小越靠上 */
+    /* 比如改成 40% 或者 30% */
+    top: 42%;
+
+    left: 50%;
+    /* 水平居中保持不变 */
+
+    /* 保持这个居中修正代码不变 */
+    transform: translate(-50%, -50%);
+
+    /* --- 2. 怎么调整大小？ --- */
+    /* 修改这个宽度数值即可，高度会自动按比例缩放 */
+    width: 260px;
+    height: auto;
+
+    /* 动画和穿透保持不变 */
+    animation: miamiShake 2s infinite ease-in-out;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* --- 疯狂摇晃动画定义 --- */
+@keyframes miamiShake {
+    0% {
+        /* 状态1：左倾 + 正常大小 */
+        transform: translate(-50%, -50%) rotate(-5deg) scale(1);
+        filter: brightness(100%);
+        /* 亮度正常 */
+    }
+
+    50% {
+        /* 状态2：右倾 + 放大 (模拟呼吸感) */
+        transform: translate(-50%, -50%) rotate(5deg) scale(1.1);
+        filter: brightness(110%);
+        /* 稍微亮一点，模拟霓虹闪烁 */
+    }
+
+    100% {
+        /* 回到原点 */
+        transform: translate(-50%, -50%) rotate(-5deg) scale(1);
+        filter: brightness(100%);
+    }
+}
+
+/* --- 桌宠定位样式 (修复版) --- */
+/* --- 桌宠定位样式 (描线版) --- */
+.desk-pet {
+    position: fixed;
+    top: 30%;
+    left: 75%;
+    z-index: 9999;
+
+    /* --- 修改重点在这里 --- */
+    box-shadow: none;
+    /* 1. 彻底删掉模糊阴影 */
+    border: 2px solid #b6b6b6;
+    /* 2. 加上 2像素 纯黑实心描边 */
+    /* -------------------- */
+
+    border-radius: 4px;
+    /* 保持圆角，或者改成 0 变成直角 */
+    background: #222;
+    width: 314px;
+    overflow: hidden;
+}
+
+/* 拖动条 */
+/* 拖动条 (浅灰色版) */
+/* --- 窗口标题栏 (伪装成真实窗口) --- */
+/* 拖动条 (配套描线版) */
+.drag-bar {
+    width: 100%;
+    height: 32px;
+    background: #e0e0e0;
+    color: #868686;
+
+    /* --- 修改这里：分割线变黑变粗 --- */
+    border-bottom: 2px solid #b1b1b1;
+    /* ----------------------------- */
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 12px;
+    cursor: default;
+    user-select: none;
+
+    /* 这里的圆角要稍微比外框小一点点，或者直接保持一致 */
+    border-radius: 0;
+}
+
+/* 1. 窗口标题 */
+.window-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #555;
+    font-family: PIXEL;
+    /* 用等宽字体更有“程序”的感觉 */
+}
+
+/* 2. 按钮容器 */
+.window-controls {
+    display: flex;
+    gap: 6px;
+    /* 按钮之间的间距 */
+}
+
+/* 3. 通用按钮样式 (圆形) */
+/* --- 按钮容器 --- */
+.window-controls {
+    display: flex;
+    gap: 0;
+    /* 这种风格按钮通常是挨得很近的，或者间隔很小 */
+    height: 100%;
+    /* 填满标题栏高度 */
+    align-items: center;
+}
+
+/* --- 通用按钮样式 (符号版) --- */
+.fake-btn {
+    width: 30px;
+    /* 按钮宽一点，好点 */
+    height: 24px;
+    /* 稍微比标题栏矮一点 */
+
+    /* 文字排版 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* 经典的 UI 字体 */
+    font-size: 14px;
+    /* 符号大小 */
+    color: #000;
+    /* 黑色符号 */
+    border-radius: 4px;
+    /* 稍微一点点圆角，或者 0 也可以 */
+    transition: background-color 0.2s;
+    text-decoration: none;
+}
+
+
+
+/* --- 微调符号位置 --- */
+/* 最小化符号有时候觉得太高，可以往下挪一点 */
+.fake-btn.minimize {
+    padding-top: 4px;
+    font-weight: bold;
+}
+
+.fake-btn.maximize {
+    font-size: 12px;
+    /* 方块稍微小一点才精致 */
+}
+
+.fake-btn.close {
+    font-size: 18px;
+    text-decoration: none;
+}
+
+/* 桌宠窗口关闭键样式 */
+.desk-pet .fake-btn.close {
+    cursor: not-allowed;
+}
+
+.desk-pet .fake-btn.close:hover {
+    cursor: not-allowed;
+    background-color: #ff5555;
+    color: white;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-15deg);
+    }
+
+    75% {
+        transform: rotate(15deg);
+    }
+}
+
+.desk-pet .fake-btn.close.shaking {
+    animation: shake 0.15s ease-in-out 2;
+}
+
+/* iframe 样式 */
+.desk-pet iframe {
+    display: block;
+    border: none;
+    background: white;
+    /* 防止加载时透明 */
+}
+
+/* --- 底部图标栏容器 --- */
+.footer-dock {
+    position: fixed;
+    bottom: 30px;
+    /* 离底部多少距离 */
+    left: 50%;
+    transform: translateX(-50%);
+    /* 水平居中 */
+
+    display: flex;
+    gap: 30px;
+    /* 图标之间的间距 */
+    z-index: 100;
+    /* 确保能点到 */
+
+    /* 可选：加个淡淡的背景条，不需要可以删掉 */
+    /* padding: 10px 20px; */
+    /* background: rgba(255, 255, 255, 0.5); */
+    /* border-radius: 20px; */
+}
+
+/* --- 图标基础样式 (平时状态：灰色 + 暗淡) --- */
+.dock-icon img {
+    width: 40px;
+    /* 图标大小，根据需要调整 */
+    height: 40px;
+    object-fit: contain;
+
+    /* 核心：去色滤镜 + 降低透明度 */
+    filter: grayscale(100%) opacity(0.5);
+
+    transition: all 0.2s;
+    /* 稍微加一点过渡，让变色顺滑 */
+}
+
+/* --- 鼠标悬停状态 (恢复 + 摇晃) --- */
+/* --- 底部图标悬停状态 --- */
+/* --- 底部图标悬停状态 --- */
+.dock-icon:hover img {
+    /* 1. 恢复颜色 */
+    filter: grayscale(0%) opacity(1);
+
+    /* 2. 修改动画参数 */
+    /* 2s: 和中间大文字原本的时间一致，变慢很多 */
+    /* ease-in-out: 慢进慢出，让摇晃像呼吸一样自然，而不是机械的匀速 */
+    animation: iconMiamiShake 0.5s infinite ease-in-out;
+}
+
+/* 
+   如果觉得之前的 miamiShake 带着忽大忽小的呼吸感不太适合图标，
+   我们可以单独定义一个“纯粹剧烈抖动”的动画。
+   如果你觉得现在的效果正好，就不用加下面这段。
+*/
+/* 
+@keyframes iconShake {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(15deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(-15deg); }
+    100% { transform: rotate(0deg); }
+}
+*/
+
+
+/* --- 定义：模拟手绘重描效果 (形变而非位移) --- */
+@keyframes redrawEffect {
+    0% {
+        /* 状态 A: 原始状态 */
+        transform: scale(1, 1) skew(0deg);
+    }
+
+    50% {
+        /* 状态 B: 模拟“画歪了”的一帧 */
+        /* scale(1.02, 0.99): 横向稍微拉宽，纵向稍微压扁 (视觉上会让线条变粗/变短) */
+        /* skew(1deg): 整体稍微发生切变 (模拟透视误差) */
+        /* 关键：没有任何 translate (位移) */
+        transform: scale(1.02, 0.99) skew(1deg);
+    }
+
+    100% {
+        transform: scale(1, 1) skew(0deg);
+    }
+}
+
+/* --- 特例控制：让死掉的小人停止抖动 --- */
+
+/* 
+   语法解释：[src*="DED"]
+   意思是：只要图片的 src 路径里包含 "DED" 这三个字 (区分大小写)
+   比如 "DED.png", "images/DED_body.png" 都会生效
+*/
+.character img[src*="DED"] {
+    animation: none !important;
+    /* 强制取消动画 */
+}
+
+/* --- 底部图标专属的迈阿密摇晃 --- */
+@keyframes iconMiamiShake {
+    0% {
+        /* 原地向左歪 */
+        transform: rotate(-10deg) scale(1);
+    }
+
+    25% {
+        /* 稍微变大 */
+        transform: rotate(0deg) scale(1.1);
+    }
+
+    50% {
+        /* 原地向右歪 */
+        transform: rotate(10deg) scale(1);
+    }
+
+    75% {
+        /* 稍微变大 */
+        transform: rotate(0deg) scale(1.1);
+    }
+
+    100% {
+        /* 回到原点 */
+        transform: rotate(-10deg) scale(1);
+    }
+}
+
+/* --- 专栏标题通用样式 --- */
+.col-title {
+    position: absolute;
+
+    /* 1. 字体设置 (可以在这里换字体) */
+    font-family: "PIXEL", sans-serif;
+    /* 想要手写风可以换成其他字体 */
+    font-size: 18px;
+    /* 字号：不大不小 */
+    font-weight: normal;
+    color: #7c7c7c;
+    /* 字体颜色 */
+
+    /* 2. 居中对齐逻辑 */
+    width: 200px;
+    /* 给个足够宽的范围 */
+    text-align: center;
+    /* 文字居中 */
+    left: 50%;
+    transform: translateX(-50%);
+    /* 确保文字中心对准小人中心 */
+
+    /* 3. 防止文字挡住鼠标点击 */
+    pointer-events: none;
+
+    /* 4. 可选：加个描边让字更清楚 */
+    text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff;
+}
+
+/* --- 上面三排 (第1, 2, 5号)：文字在头顶 --- */
+.character[style*="--i:1"] .col-title,
+.character[style*="--i:2"] .col-title,
+.character[style*="--i:5"] .col-title {
+    bottom: 102%;
+    /* 距离图片顶部的距离，数字越大离得越远 */
+}
+
+/* --- 下面两排 (第3, 4号)：文字在脚下 --- */
+.character[style*="--i:3"] .col-title,
+.character[style*="--i:4"] .col-title {
+    top: 105%;
+    /* 距离图片底部的距离 */
+}
+
+/* --- 信息弹窗样式 --- */
+.info-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+    box-shadow: none;
+    border: 2px solid #b6b6b6;
+    border-radius: 4px;
+    background: #f5f5f5;
+    width: 400px;
+    min-height: 250px;
+    display: none;
+}
+
+/* ... 后面的所有弹窗样式 ... */
+
+/* --- 信息弹窗样式 --- */
+.info-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+
+    /* 与桌宠同款外框 */
+    box-shadow: none;
+    border: 2px solid #b6b6b6;
+    border-radius: 4px;
+    background: #f5f5f5;
+
+    width: 400px;
+
+    /* 默认隐藏 */
+    display: none;
+}
+
+/* 弹窗的拖动条 */
+.popup-drag-bar {
+    cursor: default;
+}
+
+/* 弹窗内容区域 */
+/* 弹窗内容区域 */
+.popup-content {
+    padding: 20px;
+    font-family: 'PIXEL', sans-serif;
+    background: #fff;
+
+    /* 关键修改：允许滚动 */
+    overflow-y: auto;
+    flex: 1;
+
+    /* 美化滚动条 */
+    scrollbar-width: thin;
+    scrollbar-color: #b6b6b6 #f5f5f5;
+}
+
+.popup-content h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: #555;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.popup-content p {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.popup-content ul {
+    margin: 10px 0;
+    padding-left: 25px;
+}
+
+.popup-content li {
+    margin: 5px 0;
+}
+
+/* OC弹窗内容样式 */
+.oc-popup-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px;
+}
+
+.oc-message {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 12px;
+}
+
+.oc-warning {
+    font-size: 28px;
+    line-height: 1;
+}
+
+.oc-text {
+    text-align: left;
+}
+
+.oc-text p {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.oc-buttons {
+    display: flex;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.oc-btn {
+    padding: 8px 25px;
+    font-family: 'PIXEL', sans-serif;
+    font-size: 14px;
+    border: 2px solid #555;
+    border-radius: 4px;
+    background: #fff;
+    color: #555;
+    cursor: pointer;
+}
+
+.info-popup .fake-btn.close:hover {
+    cursor: pointer;
+}
+
+.info-popup .fake-btn.close:hover {
+    background-color: #ff5555;
+    color: white;
+}
+
+/* --- 文章弹窗样式 --- */
+.article-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10001;
+
+    /* 与桌宠同款外框 */
+    box-shadow: none;
+    border: 2px solid #b6b6b6;
+    border-radius: 4px;
+    background: #f5f5f5;
+
+    /* 关键修改：调整尺寸 */
+    width: 80%;
+    max-width: 900px;
+    max-height: 90vh;
+
+    display: none;
+    flex-direction: column;
+}
+
+/* 弹窗内容区域 */
+.article-popup .popup-content {
+    padding: 20px;
+    font-family: 'PIXEL', sans-serif;
+    background: #fff;
+
+    /* 关键修改：允许滚动 */
+    overflow-y: auto;
+    flex: 1;
+
+    /* 美化滚动条 */
+    scrollbar-width: thin;
+    scrollbar-color: #b6b6b6 #f5f5f5;
+}
+
+/* Webkit浏览器滚动条样式 */
+.article-popup .popup-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.article-popup .popup-content::-webkit-scrollbar-track {
+    background: #f5f5f5;
+}
+
+.article-popup .popup-content::-webkit-scrollbar-thumb {
+    background: #b6b6b6;
+    border-radius: 4px;
+}
+
+.article-popup .popup-content::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* 弹窗内的图片 */
+.article-popup .popup-content img {
+    width: 75%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+    border-radius: 4px;
+}
+}
+
+/* 弹窗完整内容区域 */
+.popup-full-content {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid #e0e0e0;
+}
+
+.popup-full-content p {
+    margin: 10px 0;
+    line-height: 1.8;
+}
+
+.popup-full-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 15px 0;
+}
+
+/* 弹窗图片容器 */
+.popup-image-wrapper {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.popup-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 4px;
+}
+
+/* 弹窗标签 */
+.popup-tags {
+    margin: 10px 0;
+}
+
+/* 弹窗摘要 */
+.popup-excerpt {
+    color: #666;
+    line-height: 1.6;
+    margin: 10px 0;
+}
+
+/* 弹窗日期 */
+.popup-date {
+    color: #999;
+    font-size: 12px;
+    margin: 10px 0;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .article-popup {
+        width: 95%;
+        max-height: 85vh;
+    }
+
+    .article-popup .popup-content {
+        padding: 15px;
+    }
+
+    .article-popup .popup-content img {
+        width: 100% !important;
+        margin: 10px 0 !important;
+    }
+
+    .popup-full-content img {
+        width: 100% !important;
+    }
+}
+
+.article-popup .popup-drag-bar {
+    width: 100%;
+    height: 32px;
+    background: #e0e0e0;
+    color: #868686;
+    border-bottom: 2px solid #b1b1b1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 12px;
+    cursor: move;
+    user-select: none;
+    border-radius: 0;
+}
+
+.article-popup .popup-drag-bar .window-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #555;
+    font-family: PIXEL;
+}
+
+.article-popup .window-controls {
+    display: flex;
+    gap: 6px;
+}
+
+.article-popup .fake-btn.close {
+    cursor: pointer;
+}
+
+.article-popup .fake-btn.close:hover {
+    background-color: #ff5555;
+    color: white;
+}
+
+/* --- 专栏窗口样式 --- */
+.column-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+}
+
+.column-window {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 900px;
+    height: 700px;
+    box-shadow: none;
+    border: 2px solid #b6b6b6;
+    border-radius: 4px;
+    background: #f5f5f5;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+}
+
+.column-drag-bar {
+    cursor: default;
+}
+
+.column-window .fake-btn.close {
+    cursor: pointer;
+}
+
+.column-window .fake-btn.close:hover {
+    background-color: #ff5555;
+    color: white;
+}
+
+.column-content {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: #fafafa;
+}
+
+.tag-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.tag-label {
+    font-family: PIXEL, sans-serif;
+    font-size: 12px;
+    color: #666;
+}
+
+.tag-filter-btn {
+    font-family: PIXEL, sans-serif;
+    font-size: 11px;
+    padding: 4px 10px;
+    background: #e0e0e0;
+    color: #555;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.tag-filter-btn:hover {
+    background: #d0d0d0;
+}
+
+.tag-filter-btn.active {
+    background: #555;
+    color: #fff;
+}
+
+.sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.sort-label {
+    font-family: PIXEL, sans-serif;
+    font-size: 12px;
+    color: #666;
+}
+
+.sort-btn {
+    font-family: PIXEL, sans-serif;
+    font-size: 11px;
+    padding: 4px 10px;
+    background: #e0e0e0;
+    color: #555;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.sort-btn:hover {
+    background: #d0d0d0;
+}
+
+.sort-btn.active {
+    background: #555;
+    color: #fff;
+}
+
+.featured-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.sort-label {
+    font-family: PIXEL, sans-serif;
+    font-size: 12px;
+    color: #666;
+}
+
+.featured-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: PIXEL, sans-serif;
+    font-size: 11px;
+    color: #666;
+    cursor: pointer;
+    user-select: none;
+}
+
+.featured-checkbox input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    accent-color: #555;
+}
+
+.featured-label {
+    transition: color 0.2s;
+}
+
+.featured-checkbox input:checked~.featured-label {
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+.article-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.article-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: all 0.2s;
+}
+
+.article-card:hover {
+    border-color: #999;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.article-link {
+    display: flex;
+    text-decoration: none;
+    color: inherit;
+}
+
+.article-image-wrapper {
+    position: relative;
+    width: 150px;
+    height: 100px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: #eee;
+}
+
+.article-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+}
+
+.article-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.15);
+    pointer-events: none;
+}
+
+.article-info {
+    flex: 1;
+    padding: 10px 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.article-tags {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 6px;
+}
+
+.tag {
+    font-family: PIXEL, sans-serif;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    color: #fff;
+}
+
+.tag-daily {
+    background: #7cb342;
+}
+
+.tag-creation {
+    background: #ab47bc;
+}
+
+.tag-talk {
+    background: #26a69a;
+}
+
+.tag-featured {
+    background: #e74c3c;
+}
+
+.article-title {
+    font-family: PIXEL, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    margin: 0 0 4px 0;
+}
+
+.article-excerpt {
+    font-family: PIXEL, sans-serif;
+    font-size: 11px;
+    color: #777;
+    margin: 0 0 6px 0;
+    line-height: 1.5;
+}
+
+.article-date {
+    font-family: PIXEL, sans-serif;
+    font-size: 10px;
+    color: #999;
+}
+
+@media screen and (max-width: 768px) {
+    .column-container {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        width: 100% !important;
+        height: 100% !important;
+        z-index: 100;
+    }
+
+    .column-window {
+        position: relative !important;
+        top: 60px !important;
+        left: 0 !important;
+        transform: none !important;
+        width: 100% !important;
+        height: calc(100vh - 60px) !important;
+        min-width: 280px !important;
+        border-radius: 0 !important;
+        border-left: none !important;
+        border-right: none !important;
+    }
+
+    .article-link {
+        flex-direction: column;
+    }
+
+    .article-image-wrapper {
+        width: 100%;
+        height: 150px;
+    }
+
+    .tag-filter,
+    .sort-controls,
+    .featured-controls {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .tag-filter-btn,
+    .sort-btn {
+        padding: 4px 10px;
+        font-size: 12px;
+    }
+
+    .column-content {
+        padding: 10px;
+        min-width: 0 !important;
+    }
+
+    .back-button {
+        width: 40px !important;
+        height: 40px !important;
+        top: 15px !important;
+        left: 15px !important;
+    }
+}
+
+@media (max-width: 950px) and (min-width: 769px) {
+    .column-window {
+        width: 90% !important;
+        min-width: 400px !important;
+        max-width: 700px !important;
+        height: 80vh;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+    }
+
+    .article-link {
+        flex-direction: column;
+    }
+
+    .article-image-wrapper {
+        width: 100%;
+        height: 150px;
+    }
+
+    .tag-filter,
+    .sort-controls,
+    .featured-controls {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .tag-filter-btn,
+    .sort-btn {
+        padding: 4px 10px;
+        font-size: 12px;
+    }
+
+    .column-content {
+        min-width: 0 !important;
+        padding: 10px;
+    }
+}
+
+/* --- 返回按钮样式 --- */
+.back-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    display: block;
+    width: 60px;
+    height: 60px;
+}
+
+.back-button img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: grayscale(100%) opacity(0.5);
+    transition: all 0.2s;
+}
+
+.back-button:hover img {
+    filter: grayscale(0%) opacity(1);
+    animation: iconMiamiShake 0.5s infinite ease-in-out;
+}
+
+/* --- 分页样式 --- */
+.pagination {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.page-info {
+    font-family: PIXEL, sans-serif;
+    font-size: 11px;
+    color: #888;
+}
+
+.page-controls {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.page-btn {
+    font-family: PIXEL, sans-serif;
+    font-size: 12px;
+    padding: 4px 8px;
+    background: #e0e0e0;
+    color: #555;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+    background: #555;
+    color: #fff;
+}
+
+.page-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.page-numbers {
+    display: flex;
+    gap: 3px;
+}
+
+.page-number {
+    font-family: PIXEL, sans-serif;
+    font-size: 11px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #e0e0e0;
+    color: #555;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.page-number:hover {
+    background: #d0d0d0;
+}
+
+.page-number.active {
+    background: #555;
+    color: #fff;
+}
+
+/* --- 修复 OC 弹窗底部灰色空白问题 --- */
+#oc-popup {
+    min-height: auto;
+    /* 让高度自动适应内容，而不是强制 250px */
+}
+
+/* --- 手机端适配 (屏幕宽度小于 768px) --- */
+@media screen and (max-width: 768px) {
+
+    /* 1. 让 body 允许垂直滚动，禁止水平滚动 */
+    body {
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: auto;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* MURDER 图片背景适配：宽度随窗口比例缩放 */
+        background-size: 85vw auto !important;
+        background-position: center 100px !important;
+        background-repeat: no-repeat;
+        /* 辅助水平居中 */
+    }
+
+    /* 确保所有子元素也不超出屏幕 */
+    .main-container,
+    .center-logo,
+    .desk-pet,
+    .info-popup {
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+
+    /* 2. 主角：小人环和Logo 居中 */
+    .main-container {
+        position: relative;
+        /* 从绝对定位改为相对定位，方便在手机流式布局 */
+        top: 75px !important;
+        left: 0 !important;
+        transform: none !important;
+        margin: 0 auto;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 500px;
+        /* 给环留出足够的显示高度 */
+    }
+
+    /* 缩小圆形菜单容器 */
+    .circle-menu {
+        width: 280px;
+        height: 280px;
+    }
+
+    /* 缩小小人 */
+    .character {
+        width: 110px;
+        height: 110px;
+        transform:
+            rotate(calc(360deg / 5 * var(--i) - 162deg)) translate(120px) rotate(calc(360deg / -5 * var(--i) + 162deg));
+    }
+
+    /* 调整第3、4个小人的位置 */
+    .character[style*="--i:3"] {
+        transform:
+            rotate(calc(360deg / 5 * var(--i) - 162deg - 10deg)) translate(100px) rotate(calc((360deg / 5 * var(--i) - 162deg - 10deg) * -1));
+    }
+
+    .character[style*="--i:4"] {
+        transform:
+            rotate(calc(360deg / 5 * var(--i) - 162deg + 10deg)) translate(100px) rotate(calc((360deg / 5 * var(--i) - 162deg + 10deg) * -1));
+    }
+
+    /* 缩小中间Logo */
+    .center-logo {
+        width: 150px;
+        top: 42%;
+    }
+
+    /* 调整 Logo 位置，使其在环的中心 */
+    #logo {
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+    }
+
+    /* 3. 桌宠在移动端改为正常流式布局，放在小人区下面 */
+    .desk-pet {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        transform: none !important;
+        margin: 80px auto 100px;
+        z-index: 100;
+    }
+
+    /* 3. 桌宠/窗口适配 */
+    .info-popup,
+    #guestbook-popup {
+        position: fixed !important;
+        /* 手机端改为固定定位，让弹窗浮在内容上面 */
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        margin: 0 auto !important;
+        width: 85vw !important;
+        max-width: 400px;
+        z-index: 1000;
+    }
+
+    /* 确保弹窗内的内容图片不溢出 */
+    .info-content img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* 手机端留言板弹窗和MURDER图片对齐 */
+    #guestbook-popup {
+        width: 90vw !important;
+        left: 50% !important;
+        top: 20px !important;
+        transform: translateX(-50%) !important;
+        z-index: 10;
+    }
+
+    #murder-bg {
+        width: 88% !important;
+        position: absolute !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        z-index: 1 !important;
+        opacity: 1;
+    }
+}
+
+/* 语言切换按钮样式 */
+#lang-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    display: flex;
+    gap: 4px;
+}
+
+.lang-btn {
+    background: #ffffff;
+    border: 2px solid #b6b6b6;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-family: 'PIXEL', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #333;
+}
+
+.lang-btn:hover {
+    background: #f0f0f0;
+    border-color: #888;
+}
